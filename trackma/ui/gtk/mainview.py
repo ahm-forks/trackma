@@ -709,6 +709,10 @@ class NotebookPage(Gtk.ScrolledWindow):
         mb_copy.connect("activate",
                         self._on_mb_activate,
                         ShowEventType.COPY_TITLE)
+        mb_copy_link = Gtk.MenuItem("Copy link to clipboard")
+        mb_copy_link.connect("activate",
+                             self._on_mb_activate,
+                             ShowEventType.COPY_LINK)
         mb_alt_title = Gtk.MenuItem("Set alternate title...")
         mb_alt_title.connect("activate",
                              self._on_mb_activate,
@@ -734,6 +738,7 @@ class NotebookPage(Gtk.ScrolledWindow):
         menu.append(mb_folder)
         menu.append(Gtk.SeparatorMenuItem())
         menu.append(mb_copy)
+        menu.append(mb_copy_link)
         menu.append(mb_alt_title)
         menu.append(Gtk.SeparatorMenuItem())
         menu.append(mb_delete)
