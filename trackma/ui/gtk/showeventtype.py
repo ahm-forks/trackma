@@ -23,6 +23,7 @@ class ShowEventType(GObject.GEnum):
     OPEN_WEBSITE = 2
     OPEN_FOLDER = 3
     COPY_TITLE = 4
+    COPY_LINK = -1
     CHANGE_ALTERNATIVE_TITLE = 5
     REMOVE = 6
     PLAY_NEXT = 7

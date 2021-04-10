@@ -81,6 +81,7 @@ class TrackmaApplication(Gtk.Application):
             ('win.episode_add', '<Primary>Right'),
             ('win.episode_remove', '<Primary>Left'),
             ('win.delete', ('Delete', 'KP_Delete')),
+            ('win.copy_link', '<Primary><Shift>C'),
             ('win.copy', '<Primary>C')
         )
 
