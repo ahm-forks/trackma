@@ -65,6 +65,13 @@
                 <property name="visible">yes</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Copy show url</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;C</property>
+                <property name="visible">yes</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
