@@ -191,6 +191,7 @@ class TrackmaWindow(Gtk.ApplicationWindow):
         add_action('episode_remove', self._on_action_episode_remove)
         add_action('delete', self._on_action_delete)
         add_action('copy', self._on_action_copy)
+        add_action('copy_link', self._on_action_copy_link)
 
     def _set_mediatypes_action(self):
         action_name = 'change-mediatype'
@@ -475,6 +476,12 @@ class TrackmaWindow(Gtk.ApplicationWindow):
         if selected_show:
             self._remove_show(selected_show)
 
+    def _on_action_copy_link(self, action, param):
+        selected_show = self._main_view.get_selected_show()
+
+        if selected_show:
+            self._copy_link(selected_show)
+
     def _on_action_copy(self, action, param):
         selected_show = self._main_view.get_selected_show()
 
@@ -502,6 +509,8 @@ class TrackmaWindow(Gtk.ApplicationWindow):
             self._open_website(*data)
         elif event_type == ShowEventType.OPEN_FOLDER:
             self._open_folder(*data)
+        elif event_type == ShowEventType.COPY_LINK:
+            self._copy_link(*data)
         elif event_type == ShowEventType.COPY_TITLE:
             self._copy_title(*data)
         elif event_type == ShowEventType.CHANGE_ALTERNATIVE_TITLE:
@@ -584,6 +593,13 @@ class TrackmaWindow(Gtk.ApplicationWindow):
         clipboard.set_text(show['title'], -1)
 
         self._main_view.set_status_idle('Title copied to clipboard.')
+
+    def _copy_link(self, show_id):
+        show = self._engine.get_show_info(show_id)
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        if show['url']:
+            clipboard.set_text(show['url'], -1)
+            self._main_view.set_status_idle('Link copied to clipboard.')
 
     def _change_alternative_title(self, show_id):
         show = self._engine.get_show_info(show_id)
