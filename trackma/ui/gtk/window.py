@@ -99,7 +99,7 @@ class TrackmaWindow(Gtk.ApplicationWindow):
 
         # Status icon
         if TrackmaStatusIcon.is_tray_available():
-            self.statusicon = TrackmaStatusIcon()
+            self.statusicon = TrackmaStatusIcon(window=self)
             self.statusicon.connect('hide-clicked', self._on_tray_hide_clicked)
             self.statusicon.connect(
                 'about-clicked', self._on_tray_about_clicked)
