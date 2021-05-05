@@ -29,31 +29,54 @@ class TrackmaStatusIcon(Gtk.StatusIcon):
         'about-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'quit-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
+    window = None
 
-    def __init__(self):
+    def __init__(self, window=None):
         Gtk.StatusIcon.__init__(self)
         self.set_from_file(utils.DATADIR + '/icon.png')
         self.set_tooltip_text('Trackma GTK')
         self.connect('activate', self._tray_status_event)
         self.connect('popup-menu', self._tray_status_menu_event)
+        self.window = window
 
     def _tray_status_event(self, _widget):
         self.emit('hide-clicked')
+
+    @property
+    def selected_show(self):
+        if self.window:
+            return self.window._main_view.get_selected_show()
+        return None
 
     def _tray_status_menu_event(self, _icon, button, time):
         # Called when the tray icon is right-clicked
         menu = Gtk.Menu()
         mb_show = Gtk.MenuItem("Show/Hide")
+        if self.window and self.selected_show:
+            mb_play_next = Gtk.ImageMenuItem(
+                'Play next', Gtk.Image.new_from_icon_name("media-seek-forward", Gtk.IconSize.MENU))
+        if self.window:
+            mb_play_random = Gtk.MenuItem("Play random episode")
         mb_about = Gtk.ImageMenuItem(
             'About', Gtk.Image.new_from_icon_name("help-about", Gtk.IconSize.MENU))
         mb_quit = Gtk.ImageMenuItem('Quit', Gtk.Image.new_from_icon_name(
             "application-exit", Gtk.IconSize.MENU))
 
+        if self.window and self.selected_show:
+            mb_play_next.connect('activate',
+                                 lambda *args: self.window._play_next(self.selected_show))
+        if self.window:
+            mb_play_random.connect('activate',
+                                   lambda *args: self.window._play_random())
         mb_show.connect("activate", self._tray_status_event)
         mb_about.connect("activate", self._on_mb_about)
         mb_quit.connect("activate", self._on_mb_quit)
 
         menu.append(mb_show)
+        if self.window and self.selected_show:
+            menu.append(mb_play_next)
+        if self.window:
+            menu.append(mb_play_random)
         menu.append(mb_about)
         menu.append(Gtk.SeparatorMenuItem())
         menu.append(mb_quit)
