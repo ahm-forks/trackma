@@ -758,6 +758,7 @@ class NotebookPage(Gtk.ScrolledWindow):
         menu_eps = Gtk.Menu()
         for i in range(1, total + 1):
             mb_playep = Gtk.CheckMenuItem(str(i))
+            mb_playep.set_property('active' if i < next_ep else 'inconsistent', i in library_episodes)
             if i == next_ep:
                 mb_playep.set_label(str(i) + " - Next")
                 menu_eps.set_focus_child(mb_playep)
