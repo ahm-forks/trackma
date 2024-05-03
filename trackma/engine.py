@@ -311,6 +311,9 @@ class Engine:
                     # We build the list "hooks available" with the loaded modules
                     # for later calls.
                     try:
+                        if not hasattr(loader.__class__, 'find_module'):
+                            setattr(loader.__class__, 'find_module',
+                                    lambda x, y: x.find_spec(y).loader)
                         self.msg.debug("Importing hook {}...".format(name))
                         module = loader.find_module(name).load_module(name)
                         if hasattr(module, 'init'):
