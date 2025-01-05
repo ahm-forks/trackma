@@ -306,12 +306,25 @@ class Engine:
 
                 try:
                     from importlib.util import module_from_spec
+                    from contextlib import contextmanager
+
+                    @contextmanager
+                    def imp_path(p):
+                        import sys
+                        op = sys.path
+                        sys.path = op[:]
+                        sys.path.insert(0, p)
+                        try:
+                            yield
+                        finally:
+                            sys.path = op
 
                     def load_hook(loader, name):
-                        spec = loader.find_spec(name)
-                        module = module_from_spec(spec)
-                        spec.loader.exec_module(module)
-                        return module
+                        with imp_path(hooks_dir):
+                            spec = loader.find_spec(name, hooks_dir)
+                            module = module_from_spec(spec)
+                            spec.loader.exec_module(module)
+                            return module
                 except ImportError:
                     def load_hook(loader, name):
                         return loader.find_module(name).load_module(name)
@@ -332,6 +345,7 @@ class Engine:
                     except ImportError:
                         self.msg.warn("Error importing hook {}.".format(name))
                         self.msg.exception(sys.exc_info())
+                        print(sys.exc_info())
 
         # Start tracker
         if self.mediainfo.get('can_play') and self.config['tracker_enabled']:
